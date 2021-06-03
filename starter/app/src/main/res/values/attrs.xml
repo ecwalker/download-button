@@ -2,5 +2,8 @@
 <resources>
     <declare-styleable name="LoadingButton">
 <!--   TODO: create custom attributes for the view-->
+        <attr name="buttonColourCompleted" format="color"/>
+        <attr name="buttonColourClicked" format="color"/>
+        <attr name="buttonColourLoading" format="color"/>
     </declare-styleable>
 </resources>

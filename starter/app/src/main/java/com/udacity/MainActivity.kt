@@ -9,15 +9,21 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
+import android.widget.RadioButton
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import timber.log.Timber
 
 
 class MainActivity : AppCompatActivity() {
 
     private var downloadID: Long = 0
+
+    private var selectedUrl: String? = null
 
     private lateinit var notificationManager: NotificationManager
     private lateinit var pendingIntent: PendingIntent
@@ -25,13 +31,16 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Timber.plant(Timber.DebugTree())
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
         custom_button.setOnClickListener {
-            download()
+            selectedUrl?.let{
+                download(it)
+            } ?: Toast.makeText(this, "Please select file to download", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -41,7 +50,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun download() {
+    private fun download(URL: String) {
+        Timber.i("download() called")
         val request =
             DownloadManager.Request(Uri.parse(URL))
                 .setTitle(getString(R.string.app_name))
@@ -56,9 +66,39 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val URL =
+        private const val LOADAPP_URL =
             "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter/archive/master.zip"
+        private const val GLIDE_URL =
+            "https://github.com/bumptech/glide/archive/master.zip"
+        private const val RETROFIT_URL =
+            "https://github.com/square/retrofit/archive/master.zip"
         private const val CHANNEL_ID = "channelId"
+    }
+
+    fun onRadioButtonClicked(view: View) {
+        if (view is RadioButton) {
+            // Is the button now checked?
+            val checked = view.isChecked
+
+            // Check which radio button was clicked
+            when (view.getId()) {
+                R.id.glide_radioButton ->
+                    if (checked) {
+                        Timber.i("Glide radio button checked")
+                        selectedUrl = GLIDE_URL
+                    }
+                R.id.loadApp_radioButton ->
+                    if (checked) {
+                        Timber.i("LoadApp radio button checked")
+                        selectedUrl = LOADAPP_URL
+                    }
+                R.id.retrofit_radioButton ->
+                    if (checked) {
+                        Timber.i("Retrofit radio button checked")
+                        selectedUrl = RETROFIT_URL
+                    }
+            }
+        }
     }
 
 }
