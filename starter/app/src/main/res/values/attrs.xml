@@ -5,5 +5,6 @@
         <attr name="buttonColourCompleted" format="color"/>
         <attr name="buttonColourClicked" format="color"/>
         <attr name="buttonColourLoading" format="color"/>
+        <attr name="loadingCircleColour" format="color"/>
     </declare-styleable>
 </resources>

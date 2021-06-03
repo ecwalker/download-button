@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import kotlinx.android.synthetic.main.content_main.view.*
 import timber.log.Timber
 
 
@@ -38,9 +39,14 @@ class MainActivity : AppCompatActivity() {
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
         custom_button.setOnClickListener {
-            selectedUrl?.let{
-                download(it)
-            } ?: Toast.makeText(this, "Please select file to download", Toast.LENGTH_SHORT).show()
+            if (selectedUrl != null) {
+                //download(selectedUrl!!)
+                it.custom_button.onDownloadStart()
+
+            } else {
+                Toast.makeText(this, "Please select file to download", Toast.LENGTH_SHORT).show()
+                //it.custom_button.onDownloadComplete()
+            }
         }
     }
 

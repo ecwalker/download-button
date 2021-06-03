@@ -55,6 +55,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:buttonColourCompleted="@color/colorPrimary"
         app:buttonColourClicked="@color/colorPrimaryDark"
-        app:buttonColourLoading="@color/colorPrimaryDark"/>
+        app:buttonColourLoading="@color/colorPrimaryDark"
+        app:loadingCircleColour="@color/colorAccent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
