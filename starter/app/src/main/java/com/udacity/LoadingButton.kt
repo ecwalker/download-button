@@ -15,6 +15,8 @@ import timber.log.Timber
 import kotlin.math.min
 import kotlin.properties.Delegates
 
+//TODO: Fix order of button state change
+
 private var buttonColourCompleted = 0
 private var buttonColourClicked = 0
 private var buttonColourLoading = 0
@@ -25,6 +27,8 @@ private lateinit var buttonRect: Rect
 private lateinit var clickedRect: Rect
 private lateinit var buttonLabel: String
 
+private var downloadStarted = false
+
 
 class LoadingButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -32,7 +36,6 @@ class LoadingButton @JvmOverloads constructor(
 
     private var widthSize = 0
     private var heightSize = 0
-    //private var radius = 0.0f
 
     private lateinit var oval: RectF
     private var sweepAngle = 0f
@@ -51,6 +54,10 @@ class LoadingButton @JvmOverloads constructor(
             //If state is Clicked: start rectangle animation
             ButtonState.Clicked -> {
                 growRect()
+                //TODO: What if this runs before onClickListener in Main Activity?
+                if (downloadStarted) {
+                    buttonState = ButtonState.Loading
+                }
             }
 
             //If state is Loading: start circle animation
@@ -63,6 +70,7 @@ class LoadingButton @JvmOverloads constructor(
                 enableViewOnComplete(this)
                 sweepAngle = 0f
                 clickedRect = Rect(0, 0, 0, height)
+                downloadStarted = false
                 invalidate()
             }
         }
@@ -173,6 +181,7 @@ class LoadingButton @JvmOverloads constructor(
         valueAnimator.duration = 5000
         valueAnimator.disableViewDuringAnimation(this)
         valueAnimator.updateClickedRect()
+        valueAnimator.onDownloadNotStarted()
         valueAnimator.start()
     }
 
@@ -183,6 +192,7 @@ class LoadingButton @JvmOverloads constructor(
         valueAnimator.duration = 5000
         valueAnimator.disableViewDuringAnimation(this)
         valueAnimator.updateSweepAngle()
+        valueAnimator.callOnDownloadComplete()
         valueAnimator.start()
     }
 
@@ -192,10 +202,27 @@ class LoadingButton @JvmOverloads constructor(
             override fun onAnimationStart(animation: Animator?) {
                 view.isEnabled = false
             }
+        })
+    }
 
-            //TODO: Remove temp button state change on animation end
+    //Extension function to change call onDownloadComplete when animation ends
+    private fun ValueAnimator.callOnDownloadComplete() {
+        addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator?) {
-                onDownloadComplete()
+                    if (buttonState == ButtonState.Loading) {
+                    onDownloadComplete()
+                }
+            }
+        })
+    }
+
+    //Extension function to change call onDownloadComplete when animation ends
+    private fun ValueAnimator.onDownloadNotStarted() {
+        addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator?) {
+                if (buttonState == ButtonState.Clicked) {
+                    onDownloadComplete()
+                }
             }
         })
     }
@@ -222,7 +249,7 @@ class LoadingButton @JvmOverloads constructor(
      */
 
     fun onDownloadStart() {
-        buttonState = ButtonState.Loading
+        downloadStarted = true
     }
 
     fun onDownloadComplete() {

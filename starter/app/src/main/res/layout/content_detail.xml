@@ -1,11 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".DetailActivity"
-    tools:showIn="@layout/activity_detail">
+    xmlns:tools="http://schemas.android.com/tools">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <data>
+        <variable
+            name="downloadBundle"
+            type="com.udacity.detail.DownloadBundle" />
+    </data>
+
+    <androidx.constraintlayout.motion.widget.MotionLayout
+        android:id="@+id/downloadInfo_motionLayout"
+        app:layoutDescription="@xml/motion_scene"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context=".detail.DetailActivity"
+        tools:showIn="@layout/activity_detail"
+        app:motionDebug="SHOW_PATH">
+
+        <TextView
+            android:id="@+id/fileName_label_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/detail_label_start_margin"
+            android:layout_marginTop="@dimen/detail_label_top_margin"
+            android:text="@string/file_name"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/default_text_size"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/status_label_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/detail_label_start_margin"
+            android:layout_marginTop="@dimen/detail_label_intermediate_margin"
+            android:text="@string/status"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/default_text_size"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fileName_label_textView" />
+
+        <TextView
+            android:id="@+id/fileName_textView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/detail_margin_start"
+            android:layout_marginEnd="24dp"
+            android:textAlignment="viewStart"
+            android:text="@{downloadBundle.downloadText}"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/default_text_size"
+            app:layout_constraintBaseline_toBaselineOf="@+id/fileName_label_textView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="@string/loadApp_radio_text" />
+
+        <TextView
+            android:id="@+id/status_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/detail_margin_start"
+            android:text="@{downloadBundle.downloadStatus}"
+            android:textSize="@dimen/default_text_size"
+            app:setDownloadStatusColour="@{downloadBundle.downloadStatus}"
+            app:layout_constraintBaseline_toBaselineOf="@+id/status_label_textView"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="Success"
+            tools:textColor="@color/colorAccent" />
+
+        <Button
+            android:id="@+id/ok_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/detail_label_start_margin"
+            android:layout_marginEnd="@dimen/detail_label_start_margin"
+            android:layout_marginBottom="@dimen/detail_label_start_margin"
+            android:text="@string/ok"
+            android:textSize="@dimen/default_text_size"
+            android:textColor="@color/white"
+            android:background="@color/colorAccent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.motion.widget.MotionLayout>
+
+
+</layout>
